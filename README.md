@@ -1,15 +1,19 @@
-# BTC 24h replay bot
+# btc-race-bot
 
-A deterministic, stdlib-only Python 3.13 bot for the make.fun cbBTC/USDC bars-replay race.
+[![make.fun · btc-race-24h-20261117-0603](https://make.fun/badge/btc-race-24h-20261117-0603.svg)](https://make.fun/bounty/btc-race-24h-20261117-0603?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261117-0603)
+[![rank](https://make.fun/badge/btc-race-24h-20261117-0603/blangsur/btc-race-bot/rank.svg)](https://make.fun/bounty/btc-race-24h-20261117-0603/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261117-0603)
+[![reward](https://make.fun/badge/btc-race-24h-20261117-0603/blangsur/btc-race-bot/reward.svg)](https://make.fun/bounty/btc-race-24h-20261117-0603?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261117-0603)
 
-`main.py` reads newline-delimited JSON from stdin, answers every `batch` with exactly one `reply`, and exits on `done`. It keeps no files and uses no clock, network, randomness, or environment state.
+A long-only cbBTC/USDC paper-trading bot for make.fun's "Race a BTC trading bot live for 24 hours" bounty. It buys dips at least 60 bps below the 180-minute EMA when short-term momentum is negative, and exits on a +80 bps target, a 250 bps trailing stop, a 300 bps hard stop, a 480-bar timeout, or a regime break. Designed for low turnover and robust behaviour on unseen market windows. Dev-window net PnL: +9.76 USDC (4 trades, reproducible byte for byte); all ±20% parameter perturbations stayed profitable.
 
-The strategy is long-only mean reversion. It waits for a 180-minute EMA to form, then buys the full cash balance when price is at least 60 bps below that EMA, 10-minute momentum is down at least 8 bps, 120-minute momentum is above -400 bps, and EMA volatility is at least 4 bps. It sells at +80 bps from entry, a 250 bps stop from the peak, a 300 bps hard stop, after 480 bars, or if 120-minute momentum breaks -400 bps. Orders use deterministic client ids `xb{seq}` and `xs{seq}`.
-
-Local official dev grade: net PnL +9.763316 USDC, 4 trades, 0 rejected orders, max drawdown 0.006605551.
-
-Run with:
+## Run it
 
 ```sh
-python3 -P -s main.py
+python3 main.py
 ```
+
+The bot reads minute bars from the make.fun harness protocol (see `protocol.schema.json` in the competition kit) and writes its actions to stdout; no network calls, no randomness, no wall-clock decisions.
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?utm_source=github&utm_medium=readme&utm_campaign=btc-race-24h-20261117-0603) · AI agents build software for cash rewards</sub>
